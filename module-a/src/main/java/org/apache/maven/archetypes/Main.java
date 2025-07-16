@@ -2,12 +2,13 @@ package org.apache.maven.archetypes;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
-        String message = (String) context.getBean("message");
-        System.out.println(message);
+        String msg = context.getBean("message", String.class);
+        System.out.println(msg);
     }
 }
