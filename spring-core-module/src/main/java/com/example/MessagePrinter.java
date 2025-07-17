@@ -1,4 +1,4 @@
-package org.apache.maven.archetypes;
+package com.example;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ public class MessagePrinter {
     private final MessageService messageService;
 
     @Autowired
-    public MessagePrinter(@Qualifier("englishMessageService") MessageService messageService) {
+    public MessagePrinter(@Qualifier("italianMessageService") MessageService messageService) {
         this.messageService = messageService;
     }
 

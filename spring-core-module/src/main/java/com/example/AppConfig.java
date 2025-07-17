@@ -1,10 +1,10 @@
-package org.apache.maven.archetypes;
+package com.example;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = "org.apache.maven.archetypes")
+@ComponentScan(basePackages = "com.example")
 public class AppConfig {
     public String message() {
         return "Hello Spring from @Bean!";
