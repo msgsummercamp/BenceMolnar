@@ -1,11 +1,11 @@
 package org.apache.maven.archetypes;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component("italianMessageService")
+@Service("italianMessageService")
 public class ItalianMessageService implements MessageService {
     @Override
     public String getMessage() {
-        return "Buongiorno é a ItalianMessageService!";
+        return "Ciao da ItalianMessageService!";
     }
 }

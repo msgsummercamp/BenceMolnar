@@ -10,9 +10,4 @@ public class AppTest {
         System.out.println("JUnit test is running!");
         assertTrue(true);
     }
-//
-//    @Test public void testNegative() {
-//        System.out.println("This test should fail!");
-//        fail();
-//    }
 }
