@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>module-a</artifactId>
+    <artifactId>spring-core-module</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
