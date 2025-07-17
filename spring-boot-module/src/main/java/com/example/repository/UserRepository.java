@@ -19,6 +19,7 @@ public class UserRepository implements IRepository {
         users.add(new User(2, "Bob"));
         users.add(new User(3, "Charlie"));
         users.add(new User(4, "Diana"));
+        users.add(new User(5, ""));
     }
 
     @Override
