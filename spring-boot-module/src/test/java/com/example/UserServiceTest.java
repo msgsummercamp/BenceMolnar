@@ -1,25 +1,23 @@
 package com.example;
 
 import com.example.model.User;
-import com.example.repository.UserRepository;
 import com.example.service.UserService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
+@SpringBootTest
+@Transactional
 class UserServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
-
-    @InjectMocks
+    @Autowired
     private UserService userService;
 
     public UserServiceTest() {
@@ -27,25 +25,33 @@ class UserServiceTest {
     }
 
     @Test
-    void getUsersList() {
-        List<User> users = Arrays.asList(new User(1, "Alice1", "alice@gmail.com", "password123", "Alice", "Smith"),
-                new User(2, "Bob2", "bob@gmail.com", "password456", "Bob", "Johnson"));
-        when(userRepository.findAll()).thenReturn(users);
+    void testSaveFindDeleteUser() {
+        User user = new User(1, "Alice1", "alice@gmail.com", "password123", "Alice", "Smith");
+        userService.save(user);
 
-        List<User> result = userService.getAllUsers();
+        Optional<User> found = userService.findByEmail("alice@gmail.com");
+        assertTrue(found.isPresent());
+        assertEquals("Alice1", found.get().getUsername());
 
-        assertEquals(2, result.size());
-        verify(userRepository, times(1)).findAll();
+        userService.delete(user);
+        Optional<User> foundAfterDelete = userService.findByEmail(user.getEmail());
+        assertFalse(foundAfterDelete.isPresent());
     }
 
     @Test
-    void saveAndReturnUser() {
-        User user = new User(1, "Alice1", "alice@gmail.com", "password1", "Alice", "Smith");
-        doNothing().when(userRepository).save(user);
+    void testGetAllUsers() {
+        User user1 = new User(1111111, "Test1", "test1@gmail.com", "testpass1", "Test1", "test1");
+        User user2 = new User(1111112, "Test2", "test2@gmail.com", "testpass2", "Test2", "test2");
+        userService.save(user1);
+        userService.save(user2);
 
-        User result = userService.saveUser(user);
+        List<User> users = userService.getAllUsers();
+        int usersSize = users.size();
+        assertTrue(users.size() >= 2);
 
-        assertEquals("Alice", result.getFirstName());
-        verify(userRepository, times(1)).save(user);
+        userService.delete(user1);
+        userService.delete(user2);
+        List<User> usersAfterDelete = userService.getAllUsers();
+        assertEquals(usersSize - 2, usersAfterDelete.size());
     }
 }

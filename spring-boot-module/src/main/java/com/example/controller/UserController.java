@@ -1,39 +1,69 @@
 package com.example.controller;
 
 import com.example.model.User;
-import com.example.service.IService;
+import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RestController
-@Validated
+@RequestMapping("/users")
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final IService userService;
 
     @Autowired
-    public UserController(IService userService) {
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        logger.info("Fetching all users");
-        List<User> users = userService.getAllUsers();
-        return users.stream()
-                .filter(u -> u.getUsername() != null && !u.getUsername().trim().isEmpty())
-                .collect(Collectors.toList());
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        logger.info("Creating user: {}", user);
+        return userService.save(user);
     }
 
-    @PostMapping("/users")
-    public User saveUser(@RequestBody User user) {
-        logger.info("Saving user: {}", user);
-        return userService.saveUser(user);
+    @GetMapping("/{id}")
+    public Optional<User> findById(@PathVariable Integer id) {
+        logger.info("Finding user by ID: {}", id);
+        return userService.findById(id);
+    }
+
+    @GetMapping("/{username}")
+    public Optional<User> findByUsername(@PathVariable String username) {
+        return userService.findByUsername(username);
+    }
+
+    @GetMapping("/email/{email}")
+    public Optional<User> findByEmail(@PathVariable String email) {
+        return userService.findByEmail(email);
+    }
+
+    @GetMapping
+    public List<User> findAll() {
+        return userService.getAllUsers();
+    }
+
+    @DeleteMapping("/{email}")
+    public void delete(@PathVariable String email) {
+        logger.info("Deleting user with email: {}", email);
+        Optional<User> user = userService.findByEmail(email);
+        user.ifPresent(userService::delete);
+    }
+
+    @PostMapping("/update/{id}")
+    public User updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
+        logger.info("Updating user with email: {}", id);
+        return userService.update(id, updatedUser);
+    }
+    @GetMapping("/count")
+    public Integer getUserCount() {
+        return userService.getUserCount();
     }
 }
