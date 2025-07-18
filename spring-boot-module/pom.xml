@@ -41,11 +41,6 @@
             <artifactId>mockito-core</artifactId>
             <version>5.12.0</version>
         </dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
-            <version>1.14.14</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -58,9 +53,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
-                <configuration>
-                    <argLine>-Dnet.bytebuddy.experimental=true</argLine>
-                </configuration>
             </plugin>
         </plugins>
     </build>
