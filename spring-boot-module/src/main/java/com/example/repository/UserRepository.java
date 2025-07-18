@@ -15,11 +15,11 @@ public class UserRepository implements IRepository {
     public UserRepository() {
         Logger logger = LoggerFactory.getLogger(UserRepository.class);
         logger.info("!!! Adding initial users to the repository");
-        users.add(new User(1, "Alice"));
-        users.add(new User(2, "Bob"));
-        users.add(new User(3, "Charlie"));
-        users.add(new User(4, "Diana"));
-        users.add(new User(5, ""));
+        users.add(new User(1, "Alice1", "alice@gmail.com", "password123", "Alice", "Smith"));
+        users.add(new User(2, "Bob2", "bob@gmail.com", "password123", "Bob", "Johnson"));
+        users.add(new User(3, "Charlie3", "char@gmail.com", "password123", "Charlie", "Brown"));
+        users.add(new User(4, "Dia4", "diana@gmail.com", "password123", "Diana", "Prince"));
+        users.add(new User(5, "Alan5", "alan@gmail.com", "password123", "Alan", "Turing"));
     }
 
     @Override

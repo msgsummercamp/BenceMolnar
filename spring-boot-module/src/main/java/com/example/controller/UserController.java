@@ -27,7 +27,7 @@ public class UserController {
         logger.info("Fetching all users");
         List<User> users = userService.getAllUsers();
         return users.stream()
-                .filter(u -> u.getName() != null && !u.getName().trim().isEmpty())
+                .filter(u -> u.getUsername() != null && !u.getUsername().trim().isEmpty())
                 .collect(Collectors.toList());
     }
 

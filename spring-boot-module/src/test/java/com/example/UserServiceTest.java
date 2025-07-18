@@ -28,7 +28,8 @@ class UserServiceTest {
 
     @Test
     void getUsersList() {
-        List<User> users = Arrays.asList(new User(1, "Alice"), new User(2, "Bob"));
+        List<User> users = Arrays.asList(new User(1, "Alice1", "alice@gmail.com", "password123", "Alice", "Smith"),
+                new User(2, "Bob2", "bob@gmail.com", "password456", "Bob", "Johnson"));
         when(userRepository.findAll()).thenReturn(users);
 
         List<User> result = userService.getAllUsers();
@@ -39,12 +40,12 @@ class UserServiceTest {
 
     @Test
     void saveAndReturnUser() {
-        User user = new User(1, "Alice");
+        User user = new User(1, "Alice1", "alice@gmail.com", "password1", "Alice", "Smith");
         doNothing().when(userRepository).save(user);
 
         User result = userService.saveUser(user);
 
-        assertEquals("Alice", result.getName());
+        assertEquals("Alice", result.getFirstName());
         verify(userRepository, times(1)).save(user);
     }
 }

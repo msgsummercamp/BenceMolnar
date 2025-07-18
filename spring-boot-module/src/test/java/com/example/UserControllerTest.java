@@ -30,8 +30,8 @@ public class UserControllerTest {
     @Test
     void getUsersAndReturnStatusAndHeaders() throws Exception {
         List<User> users = Arrays.asList(
-                new User(1, "Alice"),
-                new User(2, "Bob")
+                new User(1, "Alice1", "alice@gmail.com", "password123", "Alice", "Smith"),
+                new User(2, "Bob2", "bob@gmail.com", "password456", "Bob", "Johnson")
         );
         Mockito.when(userService.getAllUsers()).thenReturn(users);
 

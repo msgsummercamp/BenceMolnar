@@ -20,8 +20,8 @@ class UserRepositoryTest {
 
     @Test
     void saveAndFindAll() {
-        User user1 = new User(1, "Alice");
-        User user2 = new User(2, "Bob");
+        User user1 = new User(1, "Alice1", "alice@gmail.com", "password1", "Alice", "Smith");
+        User user2 = new User(2, "Bob2", "bob@gmail.com", "password2", "Bob", "Johnson");
 
         userRepository.save(user1);
         userRepository.save(user2);
