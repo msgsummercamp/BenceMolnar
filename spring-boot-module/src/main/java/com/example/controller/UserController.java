@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.model.User;
+import com.example.service.IUserService;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private final UserService userService;
+    private final IUserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -58,10 +59,11 @@ public class UserController {
     }
 
     @PostMapping("/update/{id}")
-    public User updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
+    public Optional<User> updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
         logger.info("Updating user with email: {}", id);
         return userService.update(id, updatedUser);
     }
+
     @GetMapping("/count")
     public Integer getUserCount() {
         return userService.getUserCount();
