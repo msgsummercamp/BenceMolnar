@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Optional;
 
 @Tag(name="User Management", description = "Operations related to user management")
@@ -48,7 +47,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "User found"),
             @ApiResponse(responseCode = "404", description = "User not found")
             })
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Integer id) {
         logger.info("Finding user by ID: {}", id);
         return userService.findById(id)
@@ -56,55 +55,57 @@ public class UserController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @Operation(summary = "Find user by username", description = "Retrieves a user by their username.",
-            responses = {
-            @ApiResponse(responseCode = "200", description = "User found"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-            })
-    @GetMapping("/user/{username}")
-    public ResponseEntity<User> findByUsername(@PathVariable String username) {
-        return userService.findByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+    // N-am șters încă fiindcă poate varianta nouă (jos de tot) nu o să-ți placă. Dar dacă făcem multe GetMapping-uri
+    // separate îmi dădea eroare la mvn clean install că Controllerul prea multe metode cu același mapping.
 
-    @Operation(summary = "Find user by email", description = "Retrieves a user by their email address.",
-            responses = {
-            @ApiResponse(responseCode = "200", description = "User found"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-            })
-    @GetMapping("/email/{email}")
-    public ResponseEntity<User> findByEmail(@PathVariable String email) {
-        return userService.findByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
+//    @Operation(summary = "Find user by username", description = "Retrieves a user by their username.",
+//            responses = {
+//            @ApiResponse(responseCode = "200", description = "User found"),
+//            @ApiResponse(responseCode = "404", description = "User not found")
+//            })
+//    @GetMapping
+//    public ResponseEntity<User> findByUsername(@RequestParam String username) {
+//        return userService.findByUsername(username)
+//                .map(ResponseEntity::ok)
+//                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+//    }
 
-    @Operation(summary = "Find all users", description = "Retrieves a paginated list of all users.",
-            responses = {
-            @ApiResponse(responseCode = "200", description = "Users retrieved successfully"),
-            @ApiResponse(responseCode = "404", description = "No users found")
-            })
-    @GetMapping("/page/{page}/size/{size}")
-    public ResponseEntity<List<User>> findAll(@PathVariable int page, @PathVariable int size) {
-        logger.info("Retrieving users - page: {}, size: {}", page, size);
-        Page<User> users = userService.getUsersByPage(page, size);
-        return ResponseEntity.ok(users.getContent());
-    }
+//    @Operation(summary = "Find user by email", description = "Retrieves a user by their email address.",
+//            responses = {
+//            @ApiResponse(responseCode = "200", description = "User found"),
+//            @ApiResponse(responseCode = "404", description = "User not found")
+//            })
+//    @GetMapping
+//    public ResponseEntity<User> findByEmail(@RequestParam String email) {
+//        return userService.findByEmail(email)
+//                .map(ResponseEntity::ok)
+//                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+//    }
+
+//    @Operation(summary = "Find all users", description = "Retrieves a paginated list of all users.",
+//            responses = {
+//            @ApiResponse(responseCode = "200", description = "Users retrieved successfully"),
+//            @ApiResponse(responseCode = "404", description = "No users found")
+//            })
+//    @GetMapping
+//    public ResponseEntity<List<User>> findAll(@RequestParam int page, @RequestParam int size) {
+//        logger.info("Retrieving users - page: {}, size: {}", page, size);
+//        Page<User> users = userService.getUsersByPage(page, size);
+//        return ResponseEntity.ok(users.getContent());
+//    }
 
     @Operation(summary = "Delete user by ID", description = "Deletes a user by their unique ID.",
             responses = {
             @ApiResponse(responseCode = "204", description = "User deleted successfully"),
             @ApiResponse(responseCode = "404", description = "User not found")
             })
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> delete(@RequestParam Integer id) {
         logger.info("Deleting user with id: {}", id);
-        Optional<User> user = userService.findById(id);
-        if (user.isPresent()) {
-            userService.delete(user.get());
-            return ResponseEntity.noContent().build();
-        } else {
+        try {
+            userService.deleteById(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
@@ -114,10 +115,10 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "User updated successfully"),
             @ApiResponse(responseCode = "404", description = "User not found")
             })
-    @PutMapping("/update/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody User updatedUser) {
-        logger.info("Updating user with id: {}", id);
-        Optional<User> user = Optional.ofNullable(userService.update(id, updatedUser));
+    @PutMapping
+    public ResponseEntity<User> updateUser(@Valid @RequestBody User updatedUser) {
+        logger.info("Updating user with id: {}", updatedUser.getId());
+        Optional<User> user = Optional.ofNullable(userService.update(updatedUser.getId(), updatedUser));
         return user.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -127,10 +128,10 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "User partially updated successfully"),
             @ApiResponse(responseCode = "404", description = "User not found")
             })
-    @PatchMapping("/update_part/{id}")
-    public ResponseEntity<User> updateUserPartially(@PathVariable Integer id, @RequestBody User updatedUser) {
-        logger.info("Partially updating user with ID: {}", id);
-        Optional<User> user = Optional.ofNullable(userService.updatePartially(id, updatedUser));
+    @PatchMapping
+    public ResponseEntity<User> updateUserPartially(@RequestBody User updatedUser) {
+        logger.info("Partially updating user with ID: {}", updatedUser.getId());
+        Optional<User> user = Optional.ofNullable(userService.updatePartially(updatedUser.getId(), updatedUser));
         return user.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -142,5 +143,28 @@ public class UserController {
     @GetMapping("/count")
     public ResponseEntity<Integer> getUserCount() {
         return ResponseEntity.ok(userService.getUserCount());
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getUserByData(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+
+        if (username != null) {
+            return userService.findByUsername(username)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } else if (email != null) {
+            return userService.findByEmail(email)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } else if (page != null && size != null) {
+            Page<User> users = userService.getUsersByPage(page, size);
+            return ResponseEntity.ok(users.getContent());
+        } else {
+            return ResponseEntity.badRequest().body("No valid parameter provided");
+        }
     }
 }

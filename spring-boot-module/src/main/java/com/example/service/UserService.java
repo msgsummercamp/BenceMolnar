@@ -90,4 +90,8 @@ public class UserService {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAll(pageable);
     }
+
+    public void deleteById(Integer id) {
+        userRepository.deleteById(id);
+    }
 }
