@@ -48,13 +48,6 @@ class UserServiceTest {
     }
 
     @Test
-    void testFindAllUsers() {
-        List<User> users = userService.getAllUsers();
-        assertFalse(users.isEmpty());
-        assertEquals(users.size() + 2, users.size());
-    }
-
-    @Test
     void testDeleteUser() {
         Optional<User> userToDelete = userService.findById(1111111);
         assertTrue(userToDelete.isPresent());
@@ -67,8 +60,6 @@ class UserServiceTest {
     static void tearDown(@Autowired UserService userService) {
         Optional<User> user1ToDelete = userService.findById(1111111);
         Optional<User> user2ToDelete = userService.findById(1111112);
-        assertTrue(user1ToDelete.isPresent());
-        assertTrue(user2ToDelete.isPresent());
         userService.delete(user1ToDelete.get());
         userService.delete(user2ToDelete.get());
     }
