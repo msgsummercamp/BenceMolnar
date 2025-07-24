@@ -1,17 +1,15 @@
 package com.example.model;
 
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="users")
+@Table(name="\"user\"")
 public class User {
     @Id
     private Integer id;
@@ -25,4 +23,8 @@ public class User {
     private String firstName;
     @NotNull
     private String lastName;
+    @ManyToOne
+    @JoinColumn(name="role")
+    @NotNull
+    private Role role;
 }

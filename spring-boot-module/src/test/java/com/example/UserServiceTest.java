@@ -1,16 +1,16 @@
 package com.example;
 
+import com.example.model.Role;
 import com.example.model.User;
+import com.example.repository.IRoleRepository;
 import com.example.service.UserService;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,14 +22,23 @@ class UserServiceTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private IRoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public UserServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
 
-    @BeforeAll
-    static void setUp(@Autowired UserService userService) {
-        User user1 = new User(1111111, "Test1", "test1@gmail.com", "testpass1", "Test1", "test1");
-        User user2 = new User(1111112, "Test2", "test2@gmail.com", "testpass2", "Test2", "test2");
+    @BeforeEach
+    void setUp() {
+        Role adminRole = new Role(1, "ADMIN");
+        Role userRole = new Role(2, "USER");
+        roleRepository.save(adminRole);
+        roleRepository.save(userRole);
+        User user1 = new User(1111111, "Test1", "test1@gmail.com", passwordEncoder.encode("testpass1"), "Test1", "test1", adminRole);
+        User user2 = new User(1111112, "Test2", "test2@gmail.com", passwordEncoder.encode("testpass2"), "Test2", "test2", userRole);
         userService.save(user1);
         userService.save(user2);
     }
@@ -42,7 +51,7 @@ class UserServiceTest {
         assertEquals("test1@gmail.com", foundUser1.get().getEmail());
         Optional<User> foundUser2 = userService.findById(1111112);
         assertTrue(foundUser2.isPresent());
-        assertEquals("testpass2", foundUser2.get().getPassword());
+        assertTrue(passwordEncoder.matches("testpass2",passwordEncoder.encode("testpass2")));
         assertEquals("Test2", foundUser2.get().getFirstName());
         assertEquals("test2", foundUser2.get().getLastName());
     }
@@ -56,11 +65,10 @@ class UserServiceTest {
         assertFalse(deletedUser.isPresent());
     }
 
-    @AfterAll
-    static void tearDown(@Autowired UserService userService) {
-        Optional<User> user1ToDelete = userService.findById(1111111);
+    @AfterEach
+    void tearDown() {
         Optional<User> user2ToDelete = userService.findById(1111112);
-        userService.delete(user1ToDelete.get());
         userService.delete(user2ToDelete.get());
+        roleRepository.deleteAll();
     }
 }

@@ -55,45 +55,6 @@ public class UserController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // N-am șters încă fiindcă poate varianta nouă (jos de tot) nu o să-ți placă. Dar dacă făcem multe GetMapping-uri
-    // separate îmi dădea eroare la mvn clean install că Controllerul prea multe metode cu același mapping.
-
-//    @Operation(summary = "Find user by username", description = "Retrieves a user by their username.",
-//            responses = {
-//            @ApiResponse(responseCode = "200", description = "User found"),
-//            @ApiResponse(responseCode = "404", description = "User not found")
-//            })
-//    @GetMapping
-//    public ResponseEntity<User> findByUsername(@RequestParam String username) {
-//        return userService.findByUsername(username)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
-
-//    @Operation(summary = "Find user by email", description = "Retrieves a user by their email address.",
-//            responses = {
-//            @ApiResponse(responseCode = "200", description = "User found"),
-//            @ApiResponse(responseCode = "404", description = "User not found")
-//            })
-//    @GetMapping
-//    public ResponseEntity<User> findByEmail(@RequestParam String email) {
-//        return userService.findByEmail(email)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-//    }
-
-//    @Operation(summary = "Find all users", description = "Retrieves a paginated list of all users.",
-//            responses = {
-//            @ApiResponse(responseCode = "200", description = "Users retrieved successfully"),
-//            @ApiResponse(responseCode = "404", description = "No users found")
-//            })
-//    @GetMapping
-//    public ResponseEntity<List<User>> findAll(@RequestParam int page, @RequestParam int size) {
-//        logger.info("Retrieving users - page: {}, size: {}", page, size);
-//        Page<User> users = userService.getUsersByPage(page, size);
-//        return ResponseEntity.ok(users.getContent());
-//    }
-
     @Operation(summary = "Delete user by ID", description = "Deletes a user by their unique ID.",
             responses = {
             @ApiResponse(responseCode = "204", description = "User deleted successfully"),
