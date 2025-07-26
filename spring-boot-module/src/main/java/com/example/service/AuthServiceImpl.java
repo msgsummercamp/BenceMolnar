@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                 .signWith(key)
                 .compact();
-        return new SignInResponse(token, List.of(user.getRole().getName()));
+        return new SignInResponse(token);
     }
 
     @Override

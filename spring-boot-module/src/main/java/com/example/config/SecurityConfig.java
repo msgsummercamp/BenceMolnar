@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.exception.CustomAuthenticationFailureHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-//                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/delete").hasRole("ADMIN")
                         .requestMatchers("/users/**").hasAnyRole("ADMIN", "USER")
@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .defaultSuccessUrl("/users?page=0&size=3", true)
-                        .failureUrl("/login-error")
+                        .failureHandler(new CustomAuthenticationFailureHandler())
                         .permitAll()
                 )
         .httpBasic(Customizer.withDefaults());
