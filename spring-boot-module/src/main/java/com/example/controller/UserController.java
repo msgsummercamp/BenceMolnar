@@ -77,9 +77,9 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
             })
     @PutMapping
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User updatedUser) {
+    public ResponseEntity<Optional<User>> updateUser(@Valid @RequestBody User updatedUser) {
         logger.info("Updating user with id: {}", updatedUser.getId());
-        Optional<User> user = Optional.ofNullable(userService.update(updatedUser.getId(), updatedUser));
+        Optional<Optional<User>> user = Optional.ofNullable(userService.update(updatedUser.getId(), updatedUser));
         return user.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
