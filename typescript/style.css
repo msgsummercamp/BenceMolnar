@@ -8,19 +8,25 @@ button {
     padding: 5px 10px;
     font-size: 14px;
 }
-#dog-img {
+.dog-img {
     max-width: 400px;
     margin: 20px auto 0 auto;
     display: block;
     border-radius: 25px;
 }
-#loading {
+.loading {
     margin-top: 10px;
     font-size: 30px;
     font-style: italic;
 }
-#error {
+.error {
     color: red;
     margin-top: 10px;
     font-size: 20px;
+}
+.hidden {
+    display: none;
+}
+.visible {
+    display: block;
 }

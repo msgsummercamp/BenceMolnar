@@ -14,6 +14,7 @@ target/
 .idea/
 .target/
 msg.iml
+dist/
 
 ### Eclipse ###
 .apt_generated

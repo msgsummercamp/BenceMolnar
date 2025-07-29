@@ -1,26 +1,31 @@
-function showImg() {
-    const img = document.getElementById('dog-img');
-    const loading = document.getElementById('loading');
-    const errorDiv = document.getElementById('error');
+const img = document.querySelector('.dog-img');
+const loading = document.querySelector('.loading');
+const errorDiv = document.querySelector('.error');
 
-    if (!img || !loading || !errorDiv) return;
+async function showImg() {
+    if (!img || !loading || !errorDiv) {
+        return;
+    }
+    img.classList.remove('visible')
+    img.classList.add('hidden');
+    loading.classList.add('visible');
+    errorDiv.classList.remove('visible');
+    errorDiv.classList.add('hidden');
 
-    img.style.display = 'none';
-    errorDiv.textContent = '';
-    loading.style.display = 'block';
-    fetch('https://dog.ceo/api/breeds/image/random')
-        .then(res => {
-            if (!res.ok) throw new Error('Network response was not ok');
-            return res.json();
-        })
-        .then(data => {
-            img.src = data.message;
-            img.style.display = 'block';
-        })
-        .catch(() => {
-            errorDiv.textContent = 'Failed to fetch dog image. Please try again.';
-        })
-        .finally(() => {
-            loading.style.display = 'none';
-        });
+    try {
+        const res = await fetch('https://dog.ceo/api/breeds/image/random');
+        if (!res.ok) throw new Error('Network response was not ok');
+        const data = await res.json();
+        img.src = data.message;
+        img.classList.remove('hidden');
+        img.classList.add('visible');
+    } catch {
+        img.classList.remove('visible');
+        errorDiv.classList.remove('hidden');
+        errorDiv.classList.add('visible');
+        errorDiv.textContent = 'Failed to fetch dog image. Please try again.';
+    } finally {
+        loading.classList.remove('visible');
+        loading.classList.add('hidden');
+    }
 }
