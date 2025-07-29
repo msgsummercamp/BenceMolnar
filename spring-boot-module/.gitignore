@@ -19,6 +19,10 @@ target/
 *.iml
 *.ipr
 .target/
+spring-boot-module/.gitattributes
+spring-boot-module/.mvn
+spring-boot-module/mvnw
+spring-boot-module/mvnw.cmd
 
 ### NetBeans ###
 /nbproject/private/
