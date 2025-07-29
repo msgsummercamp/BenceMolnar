@@ -53,12 +53,13 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.14.12</version>
+            <version>1.14.16</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -92,4 +93,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
