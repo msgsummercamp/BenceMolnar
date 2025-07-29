@@ -1,4 +1,4 @@
-package org.apache.maven.archetypes;
+package com.example;
 
 import org.springframework.stereotype.Service;
 
